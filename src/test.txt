@@ -1,0 +1,25 @@
+          <div className="inline-flex mt-12">
+            <BsFillFileEarmarkPersonFill
+              className={`bg-ternary text-3xl rounded cursor-pointer block float-left mr-2`}
+            />
+            <h1
+              className={`text-white origin-left font-medium text-2xl ${
+                !openSideBar && "scale-0"
+              }`}
+            >
+              Authors
+            </h1>
+          </div>
+
+          <div className="inline-flex mt-12">
+            <BsFillHeartFill
+              className={`bg-amber text-3xl rounded cursor-pointer block float-left mr-2`}
+            />
+            <h1
+              className={`text-white origin-left font-medium text-2xl ${
+                !openSideBar && "scale-0"
+              }`}
+            >
+              Favorite Author
+            </h1>
+          </div>
