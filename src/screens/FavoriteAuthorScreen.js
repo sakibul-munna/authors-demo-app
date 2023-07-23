@@ -1,7 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
-import Lottie from "lottie-react";
-import loaderAnimation from "../animations/loader.json";
 import AuthorCard from "../components/AuthorCard.js";
 import PaginationButtons from "../components/PaginationButton";
 
@@ -10,12 +7,9 @@ const FavoriteAuthorScreen = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  const authors = useSelector((state) => state.authors.authors);
-  const isLoading = useSelector((state) => state.authors.isLoading);
   const favoriteAuthors = useMemo(() => {
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    return authors.filter((author) => favorites.includes(author._id));
-  }, [authors]);
+    return JSON.parse(localStorage.getItem("favorites")) || [];
+  }, []);
 
   const pageCount = Math.ceil(favoriteAuthors.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -26,8 +20,13 @@ const FavoriteAuthorScreen = () => {
   }, [favoriteAuthors, startIndex, endIndex]);
 
   const handleRemoveFavorite = (id) => {
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    localStorage.setItem(
+      "favorites",
+      JSON.stringify(favorites.filter((item) => item.id !== id))
+    );
     setAuthorsToDisplay((prevAuthors) =>
-      prevAuthors.filter((author) => author._id !== id)
+      prevAuthors.filter((author) => author.id !== id)
     );
   };
 
@@ -35,9 +34,7 @@ const FavoriteAuthorScreen = () => {
     <div className="p-4 h-screen flex flex-col items-center flex-1">
       <div className="text-center mt-10">
         <h1 className="text-2xl font-bold mb-4">Favorite Authors</h1>
-        {isLoading ? (
-          <Lottie animationData={loaderAnimation} />
-        ) : authorsToDisplay.length === 0 ? (
+        {authorsToDisplay.length === 0 ? (
           <p className="text-red-500 font-bold">No Favorite Items</p>
         ) : null}
       </div>
@@ -47,8 +44,8 @@ const FavoriteAuthorScreen = () => {
             {authorsToDisplay.map((author) => {
               return (
                 <AuthorCard
-                  key={author._id}
-                  id={author._id}
+                  key={author.id}
+                  id={author.id}
                   name={author.name}
                   bio={author.bio}
                   onRemoveFavorite={handleRemoveFavorite}
