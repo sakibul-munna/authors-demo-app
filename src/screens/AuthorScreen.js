@@ -8,17 +8,14 @@ import { fetchAuthors } from "../features/authors/authorSlice.js";
 
 const AuthorScreen = () => {
   const dispatch = useDispatch();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
-
   const authors = useSelector((state) => state.authors.authors);
-  const pageCount = Math.ceil(authors.length / itemsPerPage);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const authorsToDisplay = authors.slice(startIndex, endIndex);
-
+  const pageCount = useSelector((state) => state.authors.pageCount);
   const isLoading = useSelector((state) => state.authors.isLoading);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    dispatch(fetchAuthors(currentPage));
+  }, [dispatch, currentPage]);
 
   useEffect(() => {
     dispatch(fetchAuthors(currentPage));
@@ -32,7 +29,7 @@ const AuthorScreen = () => {
       ) : (
         <>
           <div className="grid grid-cols-3 gap-10">
-            {authorsToDisplay.map((author) => {
+            {authors.map((author) => {
               return (
                 <AuthorCard
                   key={author._id}
