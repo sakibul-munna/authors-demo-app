@@ -5,7 +5,7 @@ const AuthorCard = ({ id, name, bio, onRemoveFavorite }) => {
 
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setIsFavorite(favorites.includes(id));
+    setIsFavorite(favorites.some((item) => item.id === id));
   }, [id]);
 
   const toggleFavorite = () => {
@@ -13,13 +13,16 @@ const AuthorCard = ({ id, name, bio, onRemoveFavorite }) => {
     if (isFavorite) {
       localStorage.setItem(
         "favorites",
-        JSON.stringify(favorites.filter((item) => item !== id))
+        JSON.stringify(favorites.filter((item) => item.id !== id))
       );
       if (onRemoveFavorite) {
         onRemoveFavorite(id);
       }
     } else {
-      localStorage.setItem("favorites", JSON.stringify([...favorites, id]));
+      localStorage.setItem(
+        "favorites",
+        JSON.stringify([...favorites, { id, name, bio }])
+      );
     }
     setIsFavorite(!isFavorite);
   };
